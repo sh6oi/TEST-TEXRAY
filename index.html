@@ -1,367 +1,582 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تتبع الشحنات والأرباح</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4f46e5',
-                        secondary: '#7c3aed',
-                        dark: '#1e293b',
-                        light: '#f8fafc'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
-        body {
-            font-family: 'Tajawal', sans-serif;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no">
+  <title>تحدي تقني الأشعة | X-Ray Tech Pro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Tajawal', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a1a;
+      background-image: radial-gradient(circle at 20% 30%, #2a2a2a 0%, #0d0d0d 90%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      direction: rtl;
+    }
+
+    .quiz-wrapper {
+      width: 100%;
+      max-width: 800px;
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 35px 70px rgba(0,0,0,0.7), 0 0 0 3px #ffd700, 0 0 0 8px rgba(255,215,0,0.25);
+      padding: 2rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .quiz-wrapper::after {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      background: #ffd700;
+      opacity: 0.08;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      color: #111;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .accent-text {
+      color: #ccaa00;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    .gold-badge {
+      background: #ffd700;
+      color: #000;
+      font-weight: 800;
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      display: inline-block;
+      margin: 0.8rem 0 1.5rem;
+      border: 2px solid #000;
+      box-shadow: 0 6px 0 #b38f00;
+      text-align: center;
+    }
+
+    .start-btn, .restart-btn {
+      background: #000000;
+      border: 2px solid #ffd700;
+      color: #ffd700;
+      font-weight: 800;
+      border-radius: 60px;
+      cursor: pointer;
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      padding: 0.9rem 2.5rem;
+      box-shadow: 0 10px 0 #1a1a1a, 0 10px 25px rgba(0,0,0,0.5);
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 0.5rem;
+      width: fit-content;
+      min-width: 200px;
+    }
+    .start-btn:hover, .restart-btn:hover {
+      background: #ffd700;
+      color: #000;
+      border-color: #000;
+      box-shadow: 0 12px 0 #b38f00, 0 15px 30px rgba(255,215,0,0.4);
+      transform: translateY(-3px);
+    }
+    .start-btn:active, .restart-btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 5px 0 #b38f00;
+    }
+
+    .timer-panel {
+      background: #0a0a0a;
+      border: 2px solid #ffd700;
+      border-radius: 45px;
+      padding: 0.5rem 2rem;
+      margin: 0.8rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 0 #333;
+    }
+    .timer-icon {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      color: #ffd700;
+    }
+    .timer-number {
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      font-weight: 900;
+      color: #ffd700;
+      letter-spacing: 2px;
+    }
+
+    .question-card {
+      background: #fefef5;
+      border: 2px solid #ddd;
+      border-radius: 24px;
+      padding: 1.2rem 1.2rem;
+      width: 100%;
+      margin: 0.5rem 0 1.5rem;
+      box-shadow: 0 8px 0 #e0e0e0;
+      font-size: clamp(1rem, 3.5vw, 1.25rem);
+      font-weight: 700;
+      color: #111;
+      line-height: 1.7;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      width: 100%;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .option-btn {
+      background: #fff;
+      border: 2px solid #000;
+      color: #000;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 3vw, 1.05rem);
+      padding: 0.9rem 0.5rem;
+      border-radius: 28px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #ccc;
+      transition: all 0.12s;
+      background: #fffef7;
+      word-break: break-word;
+      text-align: center;
+    }
+    .option-btn:hover {
+      background: #ffd700;
+      border-color: #000;
+      box-shadow: 0 6px 0 #b39700;
+      transform: translateY(-2px);
+    }
+
+    .feedback-area {
+      height: 55px;
+      font-size: 2.5rem;
+      margin: 0.4rem 0;
+    }
+
+    .progress-badge {
+      background: #000;
+      color: #ffd700;
+      font-weight: 800;
+      padding: 0.4rem 1.5rem;
+      border-radius: 30px;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      border: 1px solid #ffd700;
+      margin-bottom: 0.4rem;
+    }
+
+    .result-box {
+      background: #ffd700;
+      border: 3px solid #000;
+      border-radius: 45px;
+      padding: 0.7rem 2.5rem;
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-weight: 900;
+      color: #000;
+      margin: 1.2rem 0;
+      box-shadow: 0 10px 0 #b38f00;
+    }
+
+    .result-message {
+      background: #fffef5;
+      border: 2px solid #000;
+      border-radius: 24px;
+      padding: 1.2rem 1.5rem;
+      margin: 0.8rem 0 1.5rem;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.7;
+      text-align: center;
+      font-size: clamp(0.95rem, 3vw, 1.2rem);
+      box-shadow: 0 6px 0 #ddd;
+      width: 100%;
+    }
+
+    .result-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* تذييل الصفحة */
+    .footer-credit {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 1.2rem 1.5rem;
+      text-align: center;
+      border: 2px solid #ffd700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      margin-top: 5px;
+    }
+
+    .credit-line {
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      color: #111;
+      font-weight: 700;
+      margin: 0.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .insta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #000;
+      color: #ffd700;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 1px solid #ffd700;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .insta-link:hover {
+      background: #ffd700;
+      color: #000;
+      border-color: #000;
+    }
+
+    .insta-icon {
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 480px) {
+      .quiz-wrapper {
+        padding: 1.5rem 1rem;
+        border-radius: 24px;
+      }
+      .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .credit-line {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .insta-link {
+        width: 100%;
+        justify-content: center;
+      }
+      .start-btn, .restart-btn {
+        width: 100%;
+        min-width: auto;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-12 max-w-7xl">
-        <div class="text-center mb-12">
-            <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-3">نظام تتبع الشحنات والأرباح</h1>
-            <p class="text-xl text-gray-500 max-w-2xl mx-auto">إدارة وتتبع جميع شحناتك وأرباحك في مكان واحد بكل سهولة ويسر</p>
-            <div class="mt-6 h-1 bg-gradient-to-r from-primary/20 via-primary/50 to-secondary/20 rounded-full w-24 mx-auto"></div>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Add Shipment Form -->
-            <div class="bg-white p-6 rounded-2xl shadow-xl border-0 hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
-                <h2 class="text-2xl font-bold text-dark mb-6 pb-3 border-b border-gray-200/50 flex items-center">
-                    <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center mr-3">
-                        <i class="fas fa-plus text-sm"></i>
-                    </span>
-                    إضافة شحنة جديدة
-                </h2>
-                <form id="shipmentForm" class="space-y-4">
-                    <div>
-                        <label for="shipmentNumber" class="block text-sm font-medium text-gray-700 mb-1">رقم الشحنة</label>
-                        <input type="text" id="shipmentNumber" required 
-                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 placeholder-gray-400/70">
-                    </div>
-                    <div>
-                        <label for="profit" class="block text-sm font-medium text-gray-700 mb-1">مقدار الربح (د.ع)</label>
-                        <input type="number" id="profit" required min="0" step="0.01"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <button type="submit" 
-                        class="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 px-6 rounded-xl hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl group">
-                        <span class="group-hover:translate-x-1 transition-transform duration-300">
-                            <i class="fas fa-plus-circle mr-3"></i> إضافة الشحنة
-                        </span>
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Statistics Card -->
-            <div class="bg-white p-6 rounded-2xl shadow-xl border-0">
-                <h2 class="text-2xl font-bold text-dark mb-6 pb-3 border-b border-gray-200/50 flex items-center">
-                    <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
-                        <i class="fas fa-chart-line text-sm"></i>
-                    </span>
-                    الإحصائيات
-                </h2>
-                <div class="space-y-4">
-                    <div class="bg-gradient-to-br from-primary/5 to-secondary/5 p-6 rounded-xl border border-gray-200/50 backdrop-blur-sm">
-                        <h3 class="text-lg font-medium text-gray-600 mb-2">إجمالي الأرباح</h3>
-                        <p id="totalProfit" class="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">0 د.ع</p>
-                        <div class="mt-3 text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-coins mr-2 text-yellow-500"></i>
-                            مجموع أرباحك حتى الآن
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">الأرباح الشهرية</h3>
-                        <div id="monthlyStats" class="space-y-2 max-h-64 overflow-y-auto scrollbar-hide">
-                            <p class="text-center text-gray-500">لا توجد بيانات</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Recent Shipments -->
-            <div class="bg-white p-6 rounded-2xl shadow-xl border-0">
-                <h2 class="text-2xl font-bold text-dark mb-6 pb-3 border-b border-gray-200/50 flex items-center">
-                    <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-                        <i class="fas fa-truck text-sm"></i>
-                    </span>
-                    آخر الشحنات
-                </h2>
-                <div id="shipmentsList" class="space-y-3 max-h-96 overflow-y-auto scrollbar-hide">
-                    <p class="text-center text-gray-500">لا توجد شحنات مسجلة</p>
-                </div>
-            </div>
-        </div>
+<body>
+<div class="quiz-wrapper" id="appContainer">
+  <!-- شاشة البداية -->
+  <div id="welcomeScreen" class="screen">
+    <h1>🩻 <span class="accent-text">تحدي تقني الأشعة</span></h1>
+    <div class="gold-badge">⚡ هيا بنا نبدأ التحدي لنرى مهاراتك ⚡</div>
+    <button class="start-btn" id="startChallengeBtn">✨ ابدأ التحدي ✨</button>
+  </div>
+
+  <!-- شاشة الاختبار -->
+  <div id="quizScreen" class="screen hidden">
+    <div class="progress-badge" id="questionCounter">سؤال 1 / 10</div>
+    <div class="timer-panel">
+      <span class="timer-icon">⏳</span>
+      <span class="timer-number" id="timerDisplay">60</span>
     </div>
+    <div class="question-card" id="questionText"></div>
+    <div class="options-grid" id="optionsContainer"></div>
+    <div class="feedback-area" id="feedbackIcon"></div>
+  </div>
 
-    <!-- Firebase and App Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDdPDKylcUw4H4oMYKfMczfUOMf_ZX27IM",
-            authDomain: "teee1-26d2a.firebaseapp.com",
-            databaseURL: "https://teee1-26d2a-default-rtdb.firebaseio.com",
-            projectId: "teee1-26d2a",
-            storageBucket: "teee1-26d2a.firebasestorage.app",
-            messagingSenderId: "55307156214",
-            appId: "1:55307156214:web:3892356a089e8e98380ad7",
-            measurementId: "G-GVJJG6KZLC"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        
-        // DOM Elements
-        const shipmentForm = document.getElementById('shipmentForm');
-        const shipmentNumber = document.getElementById('shipmentNumber');
-        const profit = document.getElementById('profit');
-        const shipmentsList = document.getElementById('shipmentsList');
-        const totalProfit = document.getElementById('totalProfit');
-        const monthlyStats = document.getElementById('monthlyStats');
-        
-        // Format date
-        function formatDate(date) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(date).toLocaleDateString('ar-EG', options);
-        }
-        
-        // Add shipment to Firebase
-        shipmentForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const shipmentData = {
-                number: shipmentNumber.value,
-                profit: parseFloat(profit.value),
-                date: new Date().toISOString()
-            };
-            
-            database.ref('shipments').push(shipmentData)
-                .then(() => {
-                    shipmentNumber.value = '';
-                    profit.value = '';
-                })
-                .catch((error) => {
-                    console.error('Error adding shipment:', error);
-                    alert('حدث خطأ أثناء إضافة الشحنة');
-                });
-        });
-        
-        // Load shipments from Firebase
-        function loadShipments() {
-            database.ref('shipments').orderByChild('date').on('value', (snapshot) => {
-                const shipments = [];
-                let total = 0;
-                const monthlyProfits = {};
-                
-                snapshot.forEach((childSnapshot) => {
-                    const shipment = childSnapshot.val();
-                    shipment.id = childSnapshot.key;
-                    shipments.unshift(shipment); // Add to beginning to show newest first
-                    
-                    // Calculate total profit
-                    total += shipment.profit;
-                    
-                    // Calculate monthly profits
-                    const date = new Date(shipment.date);
-                    const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
-                    
-                    if (!monthlyProfits[monthYear]) {
-                        monthlyProfits[monthYear] = 0;
-                    }
-                    monthlyProfits[monthYear] += shipment.profit;
-                });
-                
-                // Update UI
-                updateShipmentsList(shipments);
-                updateTotalProfit(total);
-                updateMonthlyStats(monthlyProfits);
-            });
-        }
-        
-        // Update shipments list
-        function updateShipmentsList(shipments) {
-            if (shipments.length === 0) {
-                shipmentsList.innerHTML = '<p class="text-center text-gray-500">لا توجد شحنات مسجلة</p>';
-                return;
-            }
-            
-            shipmentsList.innerHTML = '';
-            shipments.forEach(shipment => {
-                const shipmentElement = document.createElement('div');
-                shipmentElement.className = 'bg-white p-5 rounded-xl border border-gray-200/50 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md group';
-                shipmentElement.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="font-bold text-dark group-hover:text-primary transition-colors duration-300">${shipment.number}</span>
-                            <div class="text-sm text-gray-500 mt-2 flex items-center">
-                                <i class="far fa-calendar-alt mr-2 text-primary/70"></i>
-                                ${formatDate(shipment.date)}
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-green-600 font-bold text-xl flex items-center mb-2">
-                                <span class="text-xs text-green-400 mr-1">+</span>
-                                ${shipment.profit.toFixed(2)} د.ع
-                            </span>
-                            <div class="flex space-x-2">
-                                <button onclick="editShipment('${shipment.id}')" class="bg-blue-100 hover:bg-blue-200 text-blue-600 px-3 py-2 rounded-xl transition-all duration-300 flex items-center">
-                                    <i class="fas fa-edit text-sm mr-2"></i>
-                                    تعديل
-                                </button>
-                                <button onclick="deleteShipment('${shipment.id}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-3 py-2 rounded-xl transition-all duration-300 flex items-center">
-                                    <i class="fas fa-trash-alt text-sm mr-2"></i>
-                                    حذف
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                shipmentsList.appendChild(shipmentElement);
-            });
-        }
-        
-        // Update total profit
-        function updateTotalProfit(total) {
-            totalProfit.textContent = `${total.toFixed(2)} د.ع`;
-        }
-        
-        // Update monthly statistics
-        function updateMonthlyStats(monthlyProfits) {
-            if (Object.keys(monthlyProfits).length === 0) {
-                monthlyStats.innerHTML = '<p class="text-center text-gray-500">لا توجد بيانات</p>';
-                return;
-            }
-            
-            monthlyStats.innerHTML = '';
-            
-            // Convert to array and sort by date (newest first)
-            const sortedMonths = Object.entries(monthlyProfits)
-                .sort((a, b) => b[0].localeCompare(a[0]));
-            
-            sortedMonths.forEach(([monthYear, profit]) => {
-                const [year, month] = monthYear.split('-');
-                const monthName = new Date(year, month - 1).toLocaleString('ar-EG', { month: 'long' });
-                
-                const statElement = document.createElement('div');
-                statElement.className = 'flex justify-between items-center bg-white p-3 rounded-lg border border-gray-200 mb-2 last:mb-0';
-                statElement.innerHTML = `
-                    <div class="flex items-center">
-                        <div class="w-3 h-3 bg-blue-400 rounded-full mr-2"></div>
-                        <span class="font-medium text-gray-700">${monthName} ${year}</span>
-                    </div>
-                    <span class="font-bold text-green-600 text-lg">${profit.toFixed(2)} ر.س</span>
-                `;
-                monthlyStats.appendChild(statElement);
-            });
-        }
-        
-        // Delete shipment
-        function deleteShipment(shipmentId) {
-            if (confirm('هل أنت متأكد من حذف هذه الشحنة؟')) {
-                database.ref('shipments/' + shipmentId).remove()
-                    .catch((error) => {
-                        console.error('Error deleting shipment:', error);
-                        alert('حدث خطأ أثناء حذف الشحنة');
-                    });
-            }
-        }
+  <!-- شاشة النتيجة -->
+  <div id="resultScreen" class="screen hidden">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <h1 id="resultTitle">انتهى التحدي!</h1>
+    <div class="result-box" id="finalScoreSpan">0 / 10</div>
+    <div class="result-message" id="resultMessage"></div>
+    <button class="restart-btn" id="restartChallengeBtn">🔄 إعادة الاختبار</button>
+  </div>
+</div>
 
-        // Edit shipment
-        function editShipment(shipmentId) {
-            database.ref('shipments/' + shipmentId).once('value')
-                .then((snapshot) => {
-                    const shipment = snapshot.val();
-                    
-                    // Show edit modal
-                    const editModal = document.createElement('div');
-                    editModal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
-                    editModal.innerHTML = `
-                        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="text-xl font-bold text-dark">تعديل الشحنة</h3>
-                                <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                                    class="text-gray-400 hover:text-gray-600">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">رقم الشحنة</label>
-                                    <input type="text" id="editShipmentNumber" value="${shipment.number}" 
-                                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">مقدار الربح (د.ع)</label>
-                                    <input type="number" id="editProfit" value="${shipment.profit}" min="0" step="0.01"
-                                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200">
-                                </div>
-                                <div class="flex space-x-3 pt-2">
-                                    <button onclick="updateShipment('${shipmentId}')"
-                                        class="flex-1 bg-gradient-to-r from-primary to-secondary text-white py-3 px-6 rounded-xl hover:from-primary/90 hover:to-secondary/90 transition-all duration-300">
-                                        حفظ التعديلات
-                                    </button>
-                                    <button onclick="this.parentElement.parentElement.parentElement.parentElement.remove()"
-                                        class="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-200 transition-all duration-300">
-                                        إلغاء
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(editModal);
-                })
-                .catch((error) => {
-                    console.error('Error loading shipment for edit:', error);
-                    alert('حدث خطأ أثناء تحميل الشحنة للتعديل');
-                });
-        }
+<!-- تذييل الصفحة -->
+<div class="footer-credit">
+  <div class="credit-line">
+    🎓 تم تصميم هذا الموقع من قبل التدريسي <strong>مجتبى كريم</strong>
+    <a href="https://www.instagram.com/mojtabakr1.sc?igsh=bXR0YjM1MzJ0NmE0" target="_blank" rel="noopener" class="insta-link">
+      <span class="insta-icon">📷</span> mojtabakr1.sc
+    </a>
+  </div>
+  <div class="credit-line">
+    🤝 بالتعاون مع <strong>أكاديمية ONERAY التعليمية</strong>
+    <a href="https://www.instagram.com/oneray.academy?igsh=Y29vd3ZsbWV2bncy" target="_blank" rel="noopener" class="insta-link">
+      <span class="insta-icon">📷</span> oneray.academy
+    </a>
+  </div>
+</div>
 
-        // Update shipment
-        function updateShipment(shipmentId) {
-            const editShipmentNumber = document.getElementById('editShipmentNumber');
-            const editProfit = document.getElementById('editProfit');
-            
-            if (!editShipmentNumber.value || !editProfit.value) {
-                alert('الرجاء إدخال جميع البيانات المطلوبة');
-                return;
-            }
-            
-            const updatedData = {
-                number: editShipmentNumber.value,
-                profit: parseFloat(editProfit.value),
-                date: new Date().toISOString()
-            };
-            
-            database.ref('shipments/' + shipmentId).update(updatedData)
-                .then(() => {
-                    document.querySelector('.fixed.inset-0').remove();
-                })
-                .catch((error) => {
-                    console.error('Error updating shipment:', error);
-                    alert('حدث خطأ أثناء تحديث الشحنة');
-                });
-        }
+<script>
+  (function() {
+    // بنك الأسئلة الكامل (50 سؤال)
+    const fullQuestionBank = [
+      { text: "وصل مريض إلى قسم الأشعة بعد سقوطه على يده، ويشتبه الطبيب بوجود كسر في عظم الزورقي (Scaphoid). أي وضعية تساعد على إظهار العظم بشكل أفضل؟", options: ["الوضعية الأمامية للرسغ (AP)", "الوضعية الجانبية للرسغ (Lateral)", "الوضعية الخلفية الأمامية للرسغ (PA)", "الوضعية الخلفية الأمامية مع انحراف اليد نحو الزند (PA with Ulnar Deviation)"], correct: 3 },
+      { text: "أثناء تصوير الصدر بوضعية PA، طلب تقني الأشعة من المريض أخذ شهيق عميق وحبس النفس. ما الهدف الرئيسي من ذلك؟", options: ["تقليل التباين في الصورة.", "توسيع الرئتين وإظهار تفاصيلهما بشكل أفضل.", "تكبير حجم القلب في الصورة.", "تقليل زمن التعريض."], correct: 1 },
+      { text: "مريض تعرض لحادث سير ويشتبه بوجود إصابة في الفقرات العنقية. ما هو الإجراء الصحيح قبل بدء التصوير؟", options: ["تدوير رأس المريض للحصول على صورة أفضل.", "إزالة الطوق الرقبي مباشرة.", "تثبيت العمود الفقري العنقي وعدم تحريك الرأس.", "الطلب من المريض ثني رقبته."], correct: 2 },
+      { text: "مريض لا يستطيع الوقوف، ويشتبه الطبيب بوجود انصباب جنبي (Pleural Effusion). أي وضعية هي الأنسب؟", options: ["تصوير الصدر بوضعية AP.", "تصوير الصدر بوضعية PA.", "وضعية الاستلقاء الجانبي الأيسر (Left Lateral Decubitus).", "وضعية اللوردوتيك (Lordotic View)."], correct: 2 },
+      { text: "قبل تصوير اليد، لاحظت أن المريض يرتدي خاتمًا في الإصبع المصاب. ماذا يجب أن تفعل؟", options: ["زيادة عوامل التعريض.", "إزالة الخاتم قبل التصوير.", "الاكتفاء بصورة أمامية فقط.", "تجاهل وجود الخاتم."], correct: 1 },
+      { text: "بعد الانتهاء من تصوير الركبة، لاحظت أن الصورة غير واضحة بسبب حركة المريض. ما هو التصرف الصحيح؟", options: ["إرسال الصورة للطبيب كما هي.", "تعديل الصورة بواسطة البرنامج فقط.", "إعادة التصوير إذا كانت جودة الصورة لا تسمح بالتشخيص.", "تجاهل التشويش الناتج عن الحركة."], correct: 2 },
+      { text: "مريض يعاني من إصابة في الكتف ولا يستطيع تدوير ذراعه بسبب الألم. أي وضعية تعتبر الأفضل للكشف عن احتمال وجود خلع؟", options: ["وضعية Scapular Y.", "الوضعية الأمامية للكتف (AP).", "وضعية Grashey.", "الوضعية المحورية (Axial)."], correct: 0 },
+      { text: "قبل إجراء فحص الأشعة لامرأة في عمر الإنجاب، ما هو السؤال الأكثر أهمية؟", options: ["هل تعانين من مرض السكري؟", "هل تناولتِ الطعام اليوم؟", "هل أجريتِ عملية جراحية سابقًا؟", "هل يوجد احتمال لوجود حمل؟"], correct: 3 },
+      { text: "أثناء تصوير الصدر، لاحظت أن المريض كان واقفًا مع دوران بسيط للجسم. ما هو التأثير المتوقع على الصورة؟", options: ["زيادة التباين.", "ظهور دوران في القفص الصدري على الصورة.", "حدوث تشويش بسبب الحركة فقط.", "تقليل جرعة الإشعاع."], correct: 1 },
+      { text: "طلب الطبيب تصوير المرفق، لكن المريض لا يستطيع ثني المرفق بسبب الألم الشديد. ما هو التصرف الأنسب؟", options: ["إجبار المريض على ثني المرفق بزاوية 90°.", "إلغاء الفحص.", "الاكتفاء بصورة واحدة فقط.", "تعديل وضعية التصوير بما يتناسب مع حالة المريض."], correct: 3 },
+      { text: "وصل مريض يشكو من ألم في الكاحل بعد التواء أثناء لعب كرة القدم. ما هو الفحص الروتيني الذي يبدأ به التقني؟", options: ["تصوير القدم فقط.", "تصوير الكاحل بوضعياته الروتينية.", "تصوير الساق كاملة.", "تصوير الركبة."], correct: 1 },
+      { text: "أثناء تصوير الصدر، كانت لوحتا الكتف داخل الحقل الشعاعي. ما السبب الأكثر احتمالًا؟", options: ["المريض لم يُرجع كتفيه إلى الأمام.", "زمن التعريض طويل.", "الجهد الكهربائي منخفض.", "المسافة البؤرية قصيرة."], correct: 0 },
+      { text: "عند تصوير الحوض بوضعية AP لمريض لا توجد لديه إصابة، كيف يتم وضع القدمين؟", options: ["دوران خارجي 20°.", "بدون دوران.", "دوران داخلي 15–20°.", "ثني الركبتين."], correct: 2 },
+      { text: "طلب الطبيب تصوير جسم غريب ابتلعه طفل. ما أول فحص يتم إجراؤه عادةً؟", options: ["تصوير الجمجمة.", "تصوير اليد.", "تصوير البطن فقط.", "تصوير الصدر."], correct: 3 },
+      { text: "ما الهدف الأساسي من استخدام المريلة الرصاصية (Lead Apron)؟", options: ["زيادة جودة الصورة.", "حماية المريض من الإشعاع غير الضروري.", "تثبيت المريض.", "تقليل زمن التعريض."], correct: 1 },
+      { text: "مريض يعاني من ألم شديد في الكتف ولا يستطيع رفع ذراعه. أي وضعية هي الأنسب للكشف عن الخلع؟", options: ["وضعية Scapular Y.", "الوضعية المحورية Axial.", "وضعية Grashey.", "AP Shoulder."], correct: 0 },
+      { text: "إذا تحرك المريض أثناء التعريض، فما النتيجة الأكثر شيوعًا؟", options: ["زيادة التباين.", "ظهور تشويش بسبب الحركة.", "زيادة الحدة.", "اختفاء العظام."], correct: 1 },
+      { text: "أي فحص هو الأنسب لتقييم وجود انصباب في مفصل المرفق بعد السقوط؟", options: ["AP فقط.", "Oblique فقط.", "Lateral Elbow.", "تصوير الرسغ."], correct: 2 },
+      { text: "قبل بدء أي فحص بالأشعة، ما أول خطوة يجب على التقني القيام بها؟", options: ["اختيار عوامل التعريض.", "إدخال اسم الطبيب.", "التحقق من هوية المريض.", "تجهيز الطابعة."], correct: 2 },
+      { text: "طلب الطبيب تصوير الجيوب الفكية (Maxillary Sinuses). ما الوضعية المناسبة؟", options: ["Towne.", "Caldwell.", "SMV.", "Waters."], correct: 3 },
+      { text: "أثناء تصوير اليد، لاحظ التقني أن أصابع المريض متراكبة. ماذا يجب أن يفعل؟", options: ["إعادة تموضع الأصابع قبل التعريض.", "زيادة kVp.", "تقليل SID.", "استخدام كوليميشن أكبر."], correct: 0 },
+      { text: "أي وضعية هي الأفضل لإظهار الناتئ السني (Odontoid Process)؟", options: ["AP Cervical.", "Lateral Cervical.", "Open Mouth View.", "Swimmer's View."], correct: 2 },
+      { text: "ما السبب الرئيسي لطلب المريض إزالة السلسلة المعدنية قبل تصوير الصدر؟", options: ["لمنع ظهور ظلال معدنية قد تؤثر على التشخيص.", "لتقليل الجرعة.", "لتقليل زمن التعريض.", "لمنع اهتزاز الجهاز."], correct: 0 },
+      { text: "أي فحص يُستخدم عادةً لتقييم كسر عظم الترقوة؟", options: ["تصوير الكتف.", "تصوير الترقوة.", "تصوير الصدر.", "تصوير الرقبة."], correct: 1 },
+      { text: "مريض يعاني من ألم في أسفل الظهر، وطلب الطبيب تصوير الفقرات القطنية. ما الفحص المطلوب؟", options: ["Cervical Spine.", "Thoracic Spine.", "Lumbar Spine.", "Sacrum فقط."], correct: 2 },
+      { text: "أي من التالي يُعد أفضل وسيلة لتقليل جرعة الإشعاع للمريض؟", options: ["استخدام أكبر حقل إشعاعي.", "زيادة زمن التعريض.", "إزالة الكوليميشن.", "تضييق الحقل الإشعاعي (Collimation)."], correct: 3 },
+      { text: "مريض لا يستطيع الوقوف لإجراء تصوير البطن. أي وضعية يمكن استخدامها للكشف عن الهواء الحر؟", options: ["Left Lateral Decubitus.", "AP Supine فقط.", "PA Abdomen.", "Lateral Lumbar."], correct: 0 },
+      { text: "أي من العوامل التالية يؤدي غالبًا إلى زيادة التشويش الحركي (Motion Blur)؟", options: ["قصر زمن التعريض.", "حركة المريض أثناء التعريض.", "زيادة SID.", "استخدام شبكة (Grid)."], correct: 1 },
+      { text: "بعد انتهاء التصوير، ما أول شيء يجب على التقني مراجعته؟", options: ["اسم الطبيب.", "نوع الجهاز.", "جودة الصورة وصحة التموضع.", "لون شاشة الجهاز."], correct: 2 },
+      { text: "إذا اشتبه الطبيب بوجود كسر في العظم الزورقي وكانت الصورة الأولى طبيعية، فما الإجراء المعتاد؟", options: ["إنهاء الفحص مباشرة.", "تحويل المريض إلى CT مباشرة.", "عدم تصوير الرسغ مرة أخرى.", "إجراء وضعيات إضافية مخصصة للزورقي حسب البروتوكول."], correct: 3 },
+      { text: "طلب الطبيب تصوير الصدر لمريض يشتبه بإصابته باسترواح الصدر (Pneumothorax). في حال كان المريض قادرًا على الوقوف، متى يفضل إجراء التعريض؟", options: ["أثناء الشهيق العميق.", "أثناء نهاية الزفير.", "أثناء التنفس الطبيعي.", "بعد السعال."], correct: 1 },
+      { text: "أثناء تصوير الصدر بوضعية PA، ما هو الارتفاع الصحيح للكاشف بالنسبة للمريض؟", options: ["عند مستوى الكتفين.", "عند مستوى الفقرات القطنية.", "بحيث تكون قمم الرئتين داخل الصورة بالكامل.", "عند مستوى الحجاب الحاجز فقط."], correct: 2 },
+      { text: "إذا شعر المريض بدوار أثناء الوقوف للتصوير، فما هو التصرف الأنسب؟", options: ["الاستمرار بالتصوير بسرعة.", "الطلب من المريض تحمل الدوار.", "إيقاف الفحص وتأمين سلامة المريض أولًا.", "زيادة زمن التعريض."], correct: 2 },
+      { text: "ما الهدف الأساسي من استخدام الكوليميشن (Collimation)؟", options: ["زيادة حجم الصورة.", "تقليل الإشعاع المتشتت وتحسين جودة الصورة.", "زيادة زمن التعريض.", "تكبير العظام."], correct: 1 },
+      { text: "عند تصوير إصبع اليد، ما الحد الأدنى المعتاد لعدد الوضعيات المطلوبة؟", options: ["وضعية واحدة.", "وضعيتان.", "ثلاث وضعيات.", "أربع وضعيات."], correct: 2 },
+      { text: "إذا كان المريض يعاني من إصابة شديدة في الطرف السفلي، ما هو المبدأ الصحيح أثناء التموضع؟", options: ["تحريك الطرف حتى لو سبب ألمًا.", "تثبيت الطرف وعدم تحريكه إلا عند الضرورة.", "الطلب من المريض الوقوف.", "إعادة التموضع عدة مرات."], correct: 1 },
+      { text: "أي من التالي يساعد في تقليل اهتزاز الصورة الناتج عن حركة المريض؟", options: ["زيادة زمن التعريض.", "تقليل زمن التعريض.", "زيادة حجم الحقل الإشعاعي.", "إبعاد الكاشف عن المريض."], correct: 1 },
+      { text: "قبل بدء التصوير، طلب المريض معرفة ما إذا كانت الأشعة مؤلمة. ما هو الرد الأنسب؟", options: ["نعم، ستكون مؤلمة.", "لا أعرف.", "الأشعة نفسها غير مؤلمة، لكن قد تشعر ببعض الانزعاج بسبب الوضعية.", "يعتمد على نوع الجهاز."], correct: 2 },
+      { text: "أي من الآتي يعد علامة على أن صورة الصدر بوضعية PA تم تنفيذها بشكل صحيح؟", options: ["ظهور لوحتي الكتف داخل الرئتين.", "عدم ظهور قمم الرئتين.", "تماثل نهايتي الترقوتين بالنسبة للعمود الفقري.", "ظهور الذقن داخل الصورة."], correct: 2 },
+      { text: "في حال وجود طلب تصوير لطرف أيمن، ما الذي يجب التأكد من وجوده على الصورة؟", options: ["اسم الطبيب.", "التاريخ فقط.", "مؤشر الجهة الصحيح (Right Marker).", "رقم الغرفة فقط."], correct: 2 },
+      { text: "مريض حضر لتصوير الرسغ وهو يرتدي ساعة يد في نفس الطرف. ماذا يجب أن يفعل التقني؟", options: ["إزالة الساعة قبل التصوير.", "تغطية الساعة بالمريلة الرصاصية.", "زيادة التعريض.", "عدم الاهتمام بها."], correct: 0 },
+      { text: "أي من التالي يعد أفضل طريقة للتواصل مع المريض قبل التصوير؟", options: ["إعطاء التعليمات بسرعة.", "استخدام تعليمات واضحة وبسيطة والتأكد من فهمها.", "عدم شرح خطوات الفحص.", "الاكتفاء بالإشارة باليد."], correct: 1 },
+      { text: "عند تصوير الصدر، لماذا يُطلب من المريض رفع الذقن إلى الأعلى؟", options: ["لتحسين التنفس.", "لمنع ظهور الذقن فوق قمم الرئتين.", "لتقليل الجرعة.", "لتقليل حجم القلب."], correct: 1 },
+      { text: "ما الإجراء الصحيح إذا لاحظ التقني وجود خطأ في اسم المريض قبل التعريض؟", options: ["إجراء التصوير ثم تعديل الاسم.", "تجاهل الخطأ.", "تصحيح بيانات المريض قبل التصوير.", "حذف الطلب."], correct: 2 },
+      { text: "أي من التالي يعد سببًا شائعًا لإعادة تصوير المريض؟", options: ["التموضع غير الصحيح.", "لون ملابس المريض.", "عمر المريض.", "نوع الجهاز."], correct: 0 },
+      { text: "إذا طلب الطبيب تصوير كلتا اليدين للمقارنة، فما الأفضل؟", options: ["تصوير كل يد في وقت مختلف.", "تصوير اليد السليمة فقط.", "تصوير اليدين بنفس الظروف والإعدادات.", "الاكتفاء بصورة واحدة."], correct: 2 },
+      { text: "ما الهدف من استخدام مؤشر الجهة (R أو L) على الصورة؟", options: ["تحسين جودة الصورة.", "تحديد جهة الجسم المصورة.", "تقليل الجرعة.", "زيادة التباين."], correct: 1 },
+      { text: "عند تصوير طفل صغير، ما الإجراء الأكثر أهمية؟", options: ["زيادة زمن التعريض.", "استخدام وسائل تثبيت مناسبة عند الحاجة مع تقليل الحركة.", "استخدام أكبر حقل إشعاعي.", "تجاهل حركة الطفل."], correct: 1 },
+      { text: "بعد انتهاء الفحص، ما الخطوة الأخيرة التي يجب على التقني القيام بها؟", options: ["مراجعة جودة الصورة والتأكد من اكتمال الفحص قبل خروج المريض.", "إيقاف الجهاز مباشرة.", "حذف الصور القديمة.", "إغلاق غرفة الأشعة."], correct: 0 },
+      { text: "ما أهم صفة يجب أن يتحلى بها تقني الأشعة أثناء التعامل مع المرضى؟", options: ["السرعة فقط.", "الصرامة.", "الصبر والتواصل الجيد مع المحافظة على سلامة المريض.", "تقليل وقت الفحص بأي وسيلة."], correct: 2 }
+    ];
 
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', () => {
-            loadShipments();
-        });
-    </script>
+    function getRandomQuestions(count = 10) {
+      const shuffled = [...fullQuestionBank].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
+    }
+
+    // دالة إرجاع الرسالة المناسبة حسب النتيجة
+    function getResultMessage(score, total) {
+      if (score < 5) {
+        return "عود هم سمي نفسك تقني اشعة وحط بالبايو مال انستغرام RT لو طفل مختبر هم مجاوب اكثر 😤 يلا عيد الاختبار";
+      } else if (score >= 5 && score <= 9) {
+        return "عفية عليك بس شوية شد حيلك نريد درجة كاملة فهمت لو اجي افهمك بطريقتي 💪🔥";
+      } else if (score === 10) {
+        return "لك شنو انت حلقوم 😍 عفيه عليك خليك هيج بطل 🏆👑";
+      }
+      return "";
+    }
+
+    // دالة إرجاع الإيموجي المناسب
+    function getResultEmoji(score) {
+      if (score < 5) return "😤💔";
+      if (score >= 5 && score <= 9) return "💪🔥";
+      if (score === 10) return "🏆👑😍";
+      return "🎯";
+    }
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let timerInterval = null;
+    let timeLeft = 60;
+    let canAnswer = true;
+    let autoNextTimer = null;
+
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const startBtn = document.getElementById('startChallengeBtn');
+    const restartBtn = document.getElementById('restartChallengeBtn');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const questionCounter = document.getElementById('questionCounter');
+    const feedbackIcon = document.getElementById('feedbackIcon');
+    const finalScoreSpan = document.getElementById('finalScoreSpan');
+    const resultMessage = document.getElementById('resultMessage');
+    const resultEmoji = document.getElementById('resultEmoji');
+    const resultTitle = document.getElementById('resultTitle');
+
+    function clearAllTimers() {
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
+    }
+
+    function disableAnswers() { canAnswer = false; }
+    function enableAnswers() { canAnswer = true; }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = timeLeft;
+      timerDisplay.style.color = timeLeft <= 10 ? '#ff4d4d' : '#ffd700';
+    }
+
+    function startTimer() {
+      clearAllTimers();
+      timeLeft = 60;
+      updateTimerDisplay();
+      enableAnswers();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          if (canAnswer) handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function handleTimeout() {
+      if (!canAnswer) return;
+      disableAnswers();
+      clearAllTimers();
+      feedbackIcon.textContent = '❌';
+      autoNextTimer = setTimeout(() => moveToNextQuestion(), 900);
+    }
+
+    function handleOptionClick(selectedIndex) {
+      if (!canAnswer) return;
+      disableAnswers();
+      clearAllTimers();
+      const question = currentQuestions[currentIndex];
+      const isCorrect = (selectedIndex === question.correct);
+      feedbackIcon.textContent = isCorrect ? '✅' : '❌';
+      if (isCorrect) score++;
+      autoNextTimer = setTimeout(() => moveToNextQuestion(), 850);
+    }
+
+    function moveToNextQuestion() {
+      feedbackIcon.textContent = '';
+      clearAllTimers();
+      if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+        startTimer();
+      } else {
+        showResultScreen();
+      }
+    }
+
+    function renderQuestion(index) {
+      const q = currentQuestions[index];
+      questionText.textContent = q.text;
+      questionCounter.textContent = `سؤال ${index + 1} / ${currentQuestions.length}`;
+      optionsContainer.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = `${String.fromCharCode(65 + idx)}. ${opt}`;
+        btn.addEventListener('click', (e) => handleOptionClick(idx));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function startNewRound() {
+      clearAllTimers();
+      currentQuestions = getRandomQuestions(10);
+      currentIndex = 0;
+      score = 0;
+      welcomeScreen.classList.add('hidden');
+      resultScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+      renderQuestion(0);
+      startTimer();
+      enableAnswers();
+    }
+
+    function showResultScreen() {
+      clearAllTimers();
+      quizScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
+      finalScoreSpan.textContent = `${score} / ${currentQuestions.length}`;
+      
+      // عرض الرسالة والإيموجي المناسبين
+      resultMessage.textContent = getResultMessage(score, currentQuestions.length);
+      resultEmoji.textContent = getResultEmoji(score);
+      
+      // تغيير العنوان حسب النتيجة
+      if (score < 5) {
+        resultTitle.textContent = 'يا للأسف! 😅';
+      } else if (score >= 5 && score <= 9) {
+        resultTitle.textContent = 'جيد جداً! 👏';
+      } else if (score === 10) {
+        resultTitle.textContent = 'أسطورة! 🏆';
+      }
+    }
+
+    startBtn.addEventListener('click', startNewRound);
+    restartBtn.addEventListener('click', startNewRound);
+
+    welcomeScreen.classList.remove('hidden');
+    quizScreen.classList.add('hidden');
+    resultScreen.classList.add('hidden');
+  })();
+</script>
 </body>
 </html>
