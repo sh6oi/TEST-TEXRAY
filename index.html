@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no">
   <title>تحدي تقني الأشعة | X-Ray Tech Pro</title>
+  <!-- استيراد خط تجوال الأنيق من جوجل -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -12,41 +16,58 @@
     }
 
     body {
-      font-family: 'Segoe UI', 'Tajawal', Tahoma, Geneva, Verdana, sans-serif;
-      background: #1a1a1a;
-      background-image: radial-gradient(circle at 20% 30%, #2a2a2a 0%, #0d0d0d 90%);
+      font-family: 'Tajawal', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0A0E17 0%, #141A29 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 15px;
+      padding: 20px;
       direction: rtl;
-    }
-
-    .quiz-wrapper {
-      width: 100%;
-      max-width: 800px;
-      background: #ffffff;
-      border-radius: 32px;
-      box-shadow: 0 35px 70px rgba(0,0,0,0.7), 0 0 0 3px #ffd700, 0 0 0 8px rgba(255,215,0,0.25);
-      padding: 2rem 1.8rem;
       position: relative;
-      overflow: hidden;
-      margin-bottom: 25px;
+      overflow-x: hidden;
     }
 
-    .quiz-wrapper::after {
+    /* خلفية متحركة فاخرة */
+    body::before {
       content: "";
       position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 140px;
-      height: 140px;
-      background: #ffd700;
-      opacity: 0.08;
-      border-radius: 50%;
+      top: -20%;
+      left: -20%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%);
       pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: "";
+      position: absolute;
+      bottom: -20%;
+      right: -20%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* الحاوية الرئيسية بتصميم زجاجي أنيق */
+    .quiz-wrapper {
+      width: 100%;
+      max-width: 820px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      border-radius: 40px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+      padding: 2.5rem 2.2rem;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+      margin-bottom: 25px;
     }
 
     .screen {
@@ -54,8 +75,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
-      z-index: 2;
+      width: 100%;
+      animation: fadeInUp 0.5s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hidden {
@@ -63,243 +89,324 @@
     }
 
     h1 {
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      color: #111;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: #ffffff;
       font-weight: 900;
       letter-spacing: -0.5px;
       margin-bottom: 0.5rem;
       text-align: center;
       line-height: 1.3;
     }
+
     .accent-text {
-      color: #ccaa00;
-      text-shadow: 2px 2px 0 #000;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
     }
 
+    /* شارات ذهبية متلألئة */
     .gold-badge {
-      background: #ffd700;
-      color: #000;
-      font-weight: 800;
-      font-size: clamp(1rem, 3vw, 1.3rem);
-      padding: 0.5rem 1.5rem;
+      background: linear-gradient(135deg, #FFD700, #F0B90B);
+      color: #0A0E17;
+      font-weight: 900;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      padding: 0.6rem 2rem;
       border-radius: 50px;
       display: inline-block;
       margin: 0.8rem 0 1.5rem;
-      border: 2px solid #000;
-      box-shadow: 0 6px 0 #b38f00;
+      border: none;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.25);
       text-align: center;
+      letter-spacing: 0.5px;
     }
 
+    /* أزرار رئيسية بتصميم ذهبي فاخر */
     .start-btn, .restart-btn {
-      background: #000000;
-      border: 2px solid #ffd700;
-      color: #ffd700;
-      font-weight: 800;
+      background: linear-gradient(135deg, #FFD700 0%, #F0B90B 100%);
+      color: #0A0E17;
+      border: none;
+      font-weight: 900;
       border-radius: 60px;
       cursor: pointer;
-      font-size: clamp(1.2rem, 4vw, 1.5rem);
-      padding: 0.9rem 2.5rem;
-      box-shadow: 0 10px 0 #1a1a1a, 0 10px 25px rgba(0,0,0,0.5);
-      transition: all 0.15s ease;
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      padding: 1rem 2.8rem;
+      box-shadow: 0 6px 25px rgba(255, 215, 0, 0.3);
+      transition: all 0.25s ease;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       margin-top: 0.5rem;
       width: fit-content;
-      min-width: 200px;
+      min-width: 220px;
+      position: relative;
+      overflow: hidden;
     }
+
+    .start-btn::after, .restart-btn::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      transform: scale(0.5);
+    }
+
+    .start-btn:hover::after, .restart-btn:hover::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
     .start-btn:hover, .restart-btn:hover {
-      background: #ffd700;
-      color: #000;
-      border-color: #000;
-      box-shadow: 0 12px 0 #b38f00, 0 15px 30px rgba(255,215,0,0.4);
-      transform: translateY(-3px);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 35px rgba(255, 215, 0, 0.4);
     }
     .start-btn:active, .restart-btn:active {
-      transform: translateY(5px);
-      box-shadow: 0 5px 0 #b38f00;
+      transform: translateY(2px) scale(0.98);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
     }
 
+    /* لوحة الوقت بتصميم أنيق */
     .timer-panel {
-      background: #0a0a0a;
-      border: 2px solid #ffd700;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 215, 0, 0.25);
       border-radius: 45px;
-      padding: 0.5rem 2rem;
-      margin: 0.8rem 0 1.5rem;
+      padding: 0.5rem 1.5rem;
+      margin: 0.8rem 0 1rem;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 0 #333;
+      gap: 12px;
+      backdrop-filter: blur(5px);
     }
     .timer-icon {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      color: #ffd700;
+      font-size: 1.6rem;
+      color: #FFD700;
     }
     .timer-number {
-      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      font-size: clamp(1.8rem, 4vw, 2.2rem);
       font-weight: 900;
-      color: #ffd700;
+      color: #FFD700;
       letter-spacing: 2px;
+      min-width: 50px;
+      text-align: center;
+    }
+    .timer-number.warning {
+      color: #FF4D4D;
+      animation: pulse 0.5s infinite alternate;
+    }
+    @keyframes pulse {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0.6; transform: scale(1.05); }
     }
 
+    /* شريط التقدم المتحرك */
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin: 0.2rem 0 1rem 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #FFD700, #FFA500);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-badge {
+      color: #fff;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.4rem 1.8rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 0.2rem;
+    }
+
+    /* بطاقة السؤال */
     .question-card {
-      background: #fefef5;
-      border: 2px solid #ddd;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
-      padding: 1.2rem 1.2rem;
+      padding: 1.5rem 1.5rem;
       width: 100%;
       margin: 0.5rem 0 1.5rem;
-      box-shadow: 0 8px 0 #e0e0e0;
-      font-size: clamp(1rem, 3.5vw, 1.25rem);
+      font-size: clamp(1rem, 3vw, 1.25rem);
       font-weight: 700;
-      color: #111;
+      color: #F0F4F8;
       line-height: 1.7;
       text-align: center;
       word-break: break-word;
+      box-shadow: inset 0 2px 0 rgba(255,215,0,0.1);
     }
 
+    /* شبكة الخيارات */
     .options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
       width: 100%;
       margin: 0.5rem 0 1rem;
     }
 
     .option-btn {
-      background: #fff;
-      border: 2px solid #000;
-      color: #000;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #E6EDF3;
       font-weight: 700;
-      font-size: clamp(0.9rem, 3vw, 1.05rem);
-      padding: 0.9rem 0.5rem;
-      border-radius: 28px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      padding: 1rem 0.5rem;
+      border-radius: 20px;
       cursor: pointer;
-      box-shadow: 0 5px 0 #ccc;
-      transition: all 0.12s;
-      background: #fffef7;
+      transition: all 0.2s ease;
       word-break: break-word;
       text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      backdrop-filter: blur(4px);
     }
-    .option-btn:hover {
-      background: #ffd700;
-      border-color: #000;
-      box-shadow: 0 6px 0 #b39700;
-      transform: translateY(-2px);
+    .option-btn:hover:not(:disabled) {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: #FFD700;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+    }
+    .option-btn:disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
+    /* حالات الخيارات عند الاختيار */
+    .option-btn.selected {
+      border-width: 2px;
+    }
+    .option-btn.correct {
+      background: rgba(46, 204, 113, 0.2) !important;
+      border-color: #2ecc71 !important;
+      box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+      color: #2ecc71;
+    }
+    .option-btn.wrong {
+      background: rgba(231, 76, 60, 0.2) !important;
+      border-color: #e74c3c !important;
+      box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
+      color: #e74c3c;
     }
 
     .feedback-area {
-      height: 55px;
-      font-size: 2.5rem;
-      margin: 0.4rem 0;
+      height: 60px;
+      font-size: 2.8rem;
+      margin: 0.2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .progress-badge {
-      background: #000;
-      color: #ffd700;
-      font-weight: 800;
-      padding: 0.4rem 1.5rem;
-      border-radius: 30px;
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
-      border: 1px solid #ffd700;
-      margin-bottom: 0.4rem;
-    }
-
+    /* شاشة النتيجة */
     .result-box {
-      background: #ffd700;
-      border: 3px solid #000;
+      background: linear-gradient(135deg, #FFD700, #F0B90B);
+      border: none;
       border-radius: 45px;
       padding: 0.7rem 2.5rem;
-      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-size: clamp(2rem, 6vw, 2.8rem);
       font-weight: 900;
-      color: #000;
-      margin: 1.2rem 0;
-      box-shadow: 0 10px 0 #b38f00;
+      color: #0A0E17;
+      margin: 1rem 0;
+      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);
     }
 
     .result-message {
-      background: #fffef5;
-      border: 2px solid #000;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
       padding: 1.2rem 1.5rem;
-      margin: 0.8rem 0 1.5rem;
+      margin: 0.5rem 0 1.5rem;
       font-weight: 700;
-      color: #111;
+      color: #E6EDF3;
       line-height: 1.7;
       text-align: center;
-      font-size: clamp(0.95rem, 3vw, 1.2rem);
-      box-shadow: 0 6px 0 #ddd;
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
       width: 100%;
     }
 
     .result-emoji {
-      font-size: 3.5rem;
+      font-size: 4rem;
       margin-bottom: 0.5rem;
     }
 
-    /* تذييل الصفحة */
+    /* تذييل الصفحة بتصميم زجاجي متناسق */
     .footer-credit {
       width: 100%;
-      max-width: 800px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
+      max-width: 820px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 215, 0, 0.1);
       border-radius: 28px;
       padding: 1.2rem 1.5rem;
       text-align: center;
-      border: 2px solid #ffd700;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
       margin-top: 5px;
+      z-index: 1;
     }
 
     .credit-line {
-      font-size: clamp(0.85rem, 2.5vw, 1rem);
-      color: #111;
-      font-weight: 700;
-      margin: 0.5rem 0;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: #C8D0DD;
+      font-weight: 600;
+      margin: 0.4rem 0;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       gap: 8px;
     }
+    .credit-line strong {
+      color: #ffffff;
+    }
 
     .insta-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #000;
-      color: #ffd700;
-      padding: 0.4rem 1.2rem;
+      background: linear-gradient(135deg, #FFD700, #F0B90B);
+      color: #0A0E17;
+      padding: 0.3rem 1.2rem;
       border-radius: 30px;
       text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      border: 1px solid #ffd700;
+      font-weight: 800;
+      font-size: 0.85rem;
       transition: all 0.2s;
       white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.15);
     }
-
     .insta-link:hover {
-      background: #ffd700;
+      transform: scale(1.05);
+      box-shadow: 0 6px 25px rgba(255, 215, 0, 0.3);
       color: #000;
-      border-color: #000;
     }
-
     .insta-icon {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
+    /* تحسينات الموبايل */
     @media (max-width: 480px) {
       .quiz-wrapper {
-        padding: 1.5rem 1rem;
-        border-radius: 24px;
+        padding: 1.5rem 1.2rem;
+        border-radius: 28px;
       }
       .options-grid {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 12px;
       }
       .credit-line {
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
       }
       .insta-link {
         width: 100%;
@@ -309,6 +416,9 @@
         width: 100%;
         min-width: auto;
       }
+      .timer-panel {
+        padding: 0.4rem 1rem;
+      }
     }
   </style>
 </head>
@@ -317,13 +427,16 @@
   <!-- شاشة البداية -->
   <div id="welcomeScreen" class="screen">
     <h1>🩻 <span class="accent-text">تحدي تقني الأشعة</span></h1>
-    <div class="gold-badge">⚡ هيا بنا نبدأ التحدي لنرى مهاراتك ⚡</div>
+    <div class="gold-badge">⚡ اختبر معرفتك وكن أسطورة المجال ⚡</div>
     <button class="start-btn" id="startChallengeBtn">✨ ابدأ التحدي ✨</button>
   </div>
 
   <!-- شاشة الاختبار -->
   <div id="quizScreen" class="screen hidden">
     <div class="progress-badge" id="questionCounter">سؤال 1 / 10</div>
+    <div class="progress-container">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
     <div class="timer-panel">
       <span class="timer-icon">⏳</span>
       <span class="timer-number" id="timerDisplay">60</span>
@@ -420,19 +533,13 @@
       return shuffled.slice(0, count);
     }
 
-    // دالة إرجاع الرسالة المناسبة حسب النتيجة
     function getResultMessage(score, total) {
-      if (score < 5) {
-        return "عود هم سمي نفسك تقني اشعة وحط بالبايو مال انستغرام RT لو طفل مختبر هم مجاوب اكثر 😤 يلا عيد الاختبار";
-      } else if (score >= 5 && score <= 9) {
-        return "عفية عليك بس شوية شد حيلك نريد درجة كاملة فهمت لو اجي افهمك بطريقتي 💪🔥";
-      } else if (score === 10) {
-        return "لك شنو انت حلقوم 😍 عفيه عليك خليك هيج بطل 🏆👑";
-      }
+      if (score < 5) return "عود هم سمي نفسك تقني اشعة وحط بالبايو مال انستغرام RT لو طفل مختبر هم مجاوب اكثر 😤 يلا عيد الاختبار";
+      else if (score >= 5 && score <= 9) return "عفية عليك بس شوية شد حيلك نريد درجة كاملة فهمت لو اجي افهمك بطريقتي 💪🔥";
+      else if (score === 10) return "لك شنو انت حلقوم 😍 عفيه عليك خليك هيج بطل 🏆👑";
       return "";
     }
 
-    // دالة إرجاع الإيموجي المناسب
     function getResultEmoji(score) {
       if (score < 5) return "😤💔";
       if (score >= 5 && score <= 9) return "💪🔥";
@@ -462,6 +569,7 @@
     const resultMessage = document.getElementById('resultMessage');
     const resultEmoji = document.getElementById('resultEmoji');
     const resultTitle = document.getElementById('resultTitle');
+    const progressFill = document.getElementById('progressFill');
 
     function clearAllTimers() {
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
@@ -473,7 +581,11 @@
 
     function updateTimerDisplay() {
       timerDisplay.textContent = timeLeft;
-      timerDisplay.style.color = timeLeft <= 10 ? '#ff4d4d' : '#ffd700';
+      if (timeLeft <= 10) {
+        timerDisplay.classList.add('warning');
+      } else {
+        timerDisplay.classList.remove('warning');
+      }
     }
 
     function startTimer() {
@@ -496,8 +608,19 @@
       if (!canAnswer) return;
       disableAnswers();
       clearAllTimers();
-      feedbackIcon.textContent = '❌';
-      autoNextTimer = setTimeout(() => moveToNextQuestion(), 900);
+      feedbackIcon.textContent = '⏰❌';
+      
+      // إظهار الإجابة الصحيحة عند انتهاء الوقت
+      const question = currentQuestions[currentIndex];
+      const allBtns = document.querySelectorAll('.option-btn');
+      allBtns.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === question.correct) {
+          btn.classList.add('correct');
+        }
+      });
+      
+      autoNextTimer = setTimeout(() => moveToNextQuestion(), 1200);
     }
 
     function handleOptionClick(selectedIndex) {
@@ -506,9 +629,23 @@
       clearAllTimers();
       const question = currentQuestions[currentIndex];
       const isCorrect = (selectedIndex === question.correct);
+      
+      const allBtns = document.querySelectorAll('.option-btn');
+      allBtns.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === selectedIndex) {
+          btn.classList.add('selected');
+          if (isCorrect) btn.classList.add('correct');
+          else btn.classList.add('wrong');
+        } else if (idx === question.correct) {
+          btn.classList.add('correct');
+        }
+      });
+      
       feedbackIcon.textContent = isCorrect ? '✅' : '❌';
       if (isCorrect) score++;
-      autoNextTimer = setTimeout(() => moveToNextQuestion(), 850);
+      
+      autoNextTimer = setTimeout(() => moveToNextQuestion(), 1000);
     }
 
     function moveToNextQuestion() {
@@ -527,6 +664,11 @@
       const q = currentQuestions[index];
       questionText.textContent = q.text;
       questionCounter.textContent = `سؤال ${index + 1} / ${currentQuestions.length}`;
+      
+      // تحديث شريط التقدم
+      const progress = ((index + 1) / currentQuestions.length) * 100;
+      progressFill.style.width = progress + '%';
+      
       optionsContainer.innerHTML = '';
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
@@ -542,9 +684,12 @@
       currentQuestions = getRandomQuestions(10);
       currentIndex = 0;
       score = 0;
+      progressFill.style.width = '0%';
+      
       welcomeScreen.classList.add('hidden');
       resultScreen.classList.add('hidden');
       quizScreen.classList.remove('hidden');
+      
       renderQuestion(0);
       startTimer();
       enableAnswers();
@@ -556,18 +701,12 @@
       resultScreen.classList.remove('hidden');
       finalScoreSpan.textContent = `${score} / ${currentQuestions.length}`;
       
-      // عرض الرسالة والإيموجي المناسبين
       resultMessage.textContent = getResultMessage(score, currentQuestions.length);
       resultEmoji.textContent = getResultEmoji(score);
       
-      // تغيير العنوان حسب النتيجة
-      if (score < 5) {
-        resultTitle.textContent = 'يا للأسف! 😅';
-      } else if (score >= 5 && score <= 9) {
-        resultTitle.textContent = 'جيد جداً! 👏';
-      } else if (score === 10) {
-        resultTitle.textContent = 'أسطورة! 🏆';
-      }
+      if (score < 5) resultTitle.textContent = 'يا للأسف! 😅';
+      else if (score >= 5 && score <= 9) resultTitle.textContent = 'جيد جداً! 👏';
+      else if (score === 10) resultTitle.textContent = 'أسطورة! 🏆';
     }
 
     startBtn.addEventListener('click', startNewRound);
